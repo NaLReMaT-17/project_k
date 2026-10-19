@@ -1,0 +1,12 @@
+node_modules/
+uploads/
+outputs/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+*.code-workspace
+.env
+.env.local
+.env.*.local
