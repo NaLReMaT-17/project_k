@@ -1,57 +1,35 @@
 # Word ↔ PDF Converter + QR
 
-Локальный сервер для конвертации документов и генерации QR-кодов.
+Веб-приложение для конвертации документов (DOCX ↔ PDF) и генерации QR-кодов из ссылок.
+Работает на Node.js + Express, конвертация выполняется на сервере.
 
 ## Возможности
 
 - **DOCX → PDF** через LibreOffice (headless)
 - **PDF → DOCX** через `pdf2docx` (Python)
-- **Ссылка → QR-код** (PNG) через `qrcode`
+- **Ссылка → QR-код** (PNG) через [`qrcode`](https://www.npmjs.com/package/qrcode)
+- Всё в одном сервисе, единый UI на одной странице
 
 ## Требования
 
-- Node.js 18+
-- **LibreOffice** (Writer достаточно)
-- **Python 3.9+** и пакет `pdf2docx`
+| Компонент | Версия | Зачем |
+|---|---|---|
+| Node.js | **18 LTS+** (рекомендуется 20 или 22) | Сервер и `npm` |
+| LibreOffice | Writer (любая актуальная) | DOCX → PDF |
+| Python | **3.9+** | `pdf2docx` |
+| `pdf2docx` | последняя | PDF → DOCX |
 
 ### Установка LibreOffice
 
-- Windows: https://ru.libreoffice.org/download/ (установщик `.exe`)
-- macOS: `brew install --cask libreoffice`
-- Ubuntu/Debian: `sudo apt install -y libreoffice-writer`
+- **Windows**: скачать установщик с https://ru.libreoffice.org/download/  
+  По умолчанию ставится в `C:\Program Files\LibreOffice`. Исполняемый файл для headless-режима — `soffice.com` (не `soffice.exe`).
+- **macOS**: `brew install --cask libreoffice`
+- **Ubuntu/Debian**: `sudo apt install -y libreoffice-writer fonts-dejavu fonts-liberation fonts-noto-core`
 
-Проверка: `soffice --version`
+Проверка: `soffice --version` (Linux/macOS) или `"C:\Program Files\LibreOffice\program\soffice.com" --version` (Windows).
 
 ### Установка Python и pdf2docx
 
-- Windows: https://www.python.org/downloads/ (галочка «Add Python to PATH»)
-- macOS / Linux: обычно предустановлен
-
-Затем: `python -m pip install pdf2docx` (на macOS/Linux — `python3 -m pip install --user pdf2docx`)
-
-## Установка и запуск
-
-```bash
-npm install
-npm start
-```
-
-Открыть `http://localhost:3000`.
-
-## Проверка окружения
-
-`http://localhost:3000/api/health` — покажет, найдены ли `soffice` и `pdf2docx`.
-
-## API
-
-| Метод | Endpoint | Описание |
-|---|---|---|
-| POST | `/api/docx-to-pdf` | Форма с полем `file` (DOCX), возвращает PDF |
-| POST | `/api/pdf-to-docx` | Форма с полем `file` (PDF), возвращает DOCX |
-| POST | `/api/link-to-qr` | JSON `{ "url": "...", "size": 512 }`, возвращает PNG |
-| GET | `/api/health` | Статус бинарников |
-
-## Ограничения
-
-- PDF без текстового слоя (сканы) → DOCX даст пустой файл. Нужен OCR.
-- Если `soffice` не в PATH, задайте `SOFFICE_PATH` при запуске.
+- **Windows**: установить с https://www.python.org/downloads/ (обязательно отметить «Add Python to PATH»), затем:  
+  ```powershell
+  python -m pip install pdf2docx
